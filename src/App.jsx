@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import mqtt from 'mqtt/dist/mqtt.min';
+import mqtt from 'mqtt/dist/mqtt.esm.js';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Thermometer, Droplets, Cpu, Wifi, WifiOff } from 'lucide-react';
 import './index.css';
