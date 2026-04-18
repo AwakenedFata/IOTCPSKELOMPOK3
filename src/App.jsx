@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-const mqtt = window.mqtt;
+import mqtt from 'mqtt/dist/mqtt.min';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Thermometer, Droplets, Cpu, Wifi, WifiOff } from 'lucide-react';
 import './index.css';
@@ -66,9 +66,12 @@ function App() {
 
   useEffect(() => {
     console.log('Mencoba menyambungkan ke Broker MQTT (WebSockets)...', MQTT_URL);
-    const mqttClient = mqtt.connect(MQTT_URL, MQTT_OPTIONS);
+    let mqttClient = null;
 
-    mqttClient.on('connect', () => {
+    try {
+      mqttClient = mqtt.connect(MQTT_URL, MQTT_OPTIONS);
+
+      mqttClient.on('connect', () => {
       console.log('Terhubung ke MQTT Broker');
       setConnectStatus('connected');
       
@@ -122,6 +125,11 @@ function App() {
         console.error('Gagal mem-parsing payload JSON:', e);
       }
     });
+
+    } catch (criticalError) {
+      console.error('CRITICAL: MQTT Initialization Crashed:', criticalError);
+      setConnectStatus('error');
+    }
 
     // Cleanup saat komponen dibongkar
     return () => {
@@ -179,11 +187,11 @@ function App() {
         />
         <Card 
           title="Identitas Perangkat" 
-          value={currentData.mac === 'Tidak diketahui' ? '---' : currentData.mac.substring(12)} // Singkat MAC untuk display
+          value={(!currentData.mac || currentData.mac === 'Tidak diketahui') ? '---' : String(currentData.mac).substring(12)} // Singkat MAC untuk display
           unit="" 
           icon={Cpu} 
           iconClass="icon-device"
-          footerText={`MAC: ${currentData.mac}`}
+          footerText={`MAC: ${currentData.mac || '---'}`}
         />
       </div>
 
