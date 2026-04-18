@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import mqtt from 'mqtt';
+const mqtt = window.mqtt;
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Thermometer, Droplets, Cpu, Wifi, WifiOff } from 'lucide-react';
 import './index.css';
@@ -17,7 +17,6 @@ const MQTT_OPTIONS = {
 };
 
 // Komponen Card
-// eslint-disable-next-line no-unused-vars
 const Card = ({ title, value, unit, icon: Icon, iconClass, footerText }) => (
   <div className="glass-card">
     <div className="card-header">
